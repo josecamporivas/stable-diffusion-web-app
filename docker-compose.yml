@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    container_name: sd-backend
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    environment:
+      - TRANSFORMERS_CACHE=/app/cache
+    volumes:
+      - ./backend/cache:/app/cache
+
+  frontend:
+    container_name: sd-frontend
+    image: nginx:alpine
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

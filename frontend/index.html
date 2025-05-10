@@ -3,43 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./styles.css" />
   <title>Stable Diffusion Prompt Generator</title>
-  <style>
-    body { font-family: sans-serif; padding: 2rem; max-width: 600px; margin: auto; }
-    input, button { padding: 0.5rem; width: 100%; margin-top: 1rem; }
-    img { max-width: 100%; margin-top: 2rem; border: 1px solid #ccc; }
-  </style>
+
+  <script src="./script.js" type="module"></script>
 </head>
 <body>
   <h1>Stable Diffusion Prompt Generator</h1>
+
+  <div id="promptList">
+    <h3>Try a prompt:</h3>
+    <ul>
+      <li class="prompt-option">A futuristic city at sunset</li>
+      <li class="prompt-option">A cat wearing a spacesuit</li>
+      <li class="prompt-option">A fantasy forest with glowing plants</li>
+      <li class="prompt-option">Portrait of a medieval knight</li>
+      <li class="prompt-option">Cyberpunk Tokyo street scene</li>
+    </ul>
+  </div>
+
   <input type="text" id="promptInput" placeholder="Enter your prompt here..." />
-  <button onclick="generateImage()">Generate</button>
+
+  <label for="modelSelect">Choose model:</label>
+  <select id="modelSelect">
+    <option value="CompVis/stable-diffusion-v1-4">Stable Diffusion v1.4</option>
+    <option value="stabilityai/sdxl-turbo">Stable Diffusion sdxl turbo</option>
+    <!-- <option value="runwayml/stable-diffusion-v1-5">Stable Diffusion v1.5</option>
+    <option value="dreamlike-art/dreamlike-diffusion-1.0">Dreamlike Diffusion 1.0</option>
+    <option value="prompthero/openjourney-v4">OpenJourney v4</option> -->
+  </select>
+
+  <div>
+    <label for="sizeSelect">Image size:</label>
+    <select id="sizeSelect">
+      <option value="512">512 x 512</option>
+      <option value="1024">1024 x 1024</option>
+    </select>
+  </div>
+
+  <button id="generate-button">Generate</button>
   <p id="loading" style="display:none;">Generating...</p>
-  <img id="outputImage" />
-
-  <script>
-    async function generateImage() {
-      const prompt = document.getElementById('promptInput').value;
-      const loading = document.getElementById('loading');
-      const img = document.getElementById('outputImage');
-      loading.style.display = 'block';
-      img.src = '';
-
-      try {
-        const res = await fetch('http://localhost:8000/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt })
-        });
-
-        const data = await res.json();
-        img.src = `data:image/png;base64,${data.image_base64}`;
-      } catch (err) {
-        alert("Error generating image");
-      } finally {
-        loading.style.display = 'none';
-      }
-    }
-  </script>
+  <div id="imageContainer">
+    <img id="outputImage" />
+  </div>
 </body>
 </html>

@@ -5,3 +5,4 @@ torch
 transformers
 safetensors
 accelerate
+huggingface_hub[hf_xet]

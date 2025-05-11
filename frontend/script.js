@@ -34,6 +34,5 @@ document.getElementById('promptInput').addEventListener('keypress', function (e)
 document.querySelectorAll(".prompt-option").forEach(item => {
     item.addEventListener("click", () => {
       document.getElementById("promptInput").value = item.textContent;
-      generateImage();
     });
   });

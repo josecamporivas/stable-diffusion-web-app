@@ -26,7 +26,7 @@ if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
   docker rmi sd-backend sd-frontend || echo "Las imágenes no existen o ya fueron eliminadas"
 
   echo "Reconstruyendo y levantando servicios..."
-  docker compose up -d --force-recreate --build
+  docker compose up -d --force-recreate
 
   echo "Actualización completada."
 else

@@ -1,0 +1,116 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[spanish]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{tabularx} % En el preámbulo
+\usepackage{booktabs} % Opcional: mejora el diseño de las líneas
+\usepackage{caption}  % Mejora el formato de las tablas
+
+\title{Aplicación web con Stable Diffusion}
+\author{Jose Luis Campo Rivas}
+\date{\vspace{-2ex}}
+
+\begin{document}
+\maketitle
+
+\section{Plan de Desarrollo}
+
+\subsection{Resumen}
+
+\subsubsection*{Descripción}
+Este proyecto consiste en una aplicación web que permite a los usuarios generar imágenes a partir de descripciones de texto (prompts) utilizando modelos de inteligencia artificial. La generación se basa en el modelo Stable Diffusion 2.1 \cite{rombach2022high, stablediffusion21}, un modelo de difusión entrenado para crear imágenes realistas y de alta calidad a partir de lenguaje natural. La arquitectura del sistema se divide en dos partes principales: un backend basado en FastAPI \cite{ramirez2023fastapi} y un frontend simple en HTML y JavaScript.
+
+\subsubsection*{Objetivos}
+
+\begin{itemize}
+  \item Proporcionar una interfaz web accesible para generar imágenes a partir de texto.
+  \item Implementar una API REST eficiente que aproveche modelos preentrenados de generación de imágenes.
+  \item Facilitar la despliegue y portabilidad de la aplicación mediante contenedores Docker \cite{docker2023}.
+  \item Aprovechar aceleración por GPU cuando esté disponible, para mejorar el rendimiento de la generación.
+\end{itemize}
+
+\subsubsection*{Problemática abordada}
+Con el auge de la inteligencia artificial generativa, muchas personas y desarrolladores buscan herramientas para crear imágenes desde texto de forma accesible. Sin embargo:
+
+\begin{itemize}
+  \item Muchos modelos son complejos de ejecutar localmente debido a sus requisitos técnicos (GPU, librerías especializadas).
+
+  \item Las interfaces existentes suelen ser demasiado técnicas o dependen de plataformas externas.
+
+  \item Se necesita una solución autoalojable, ligera y sencilla, que permita experimentar con generación de imágenes sin depender de terceros.
+\end{itemize}
+
+Este proyecto responde a esa necesidad, ofreciendo una solución modular, fácil de desplegar y de usar tanto para usuarios como para desarrolladores.
+
+\subsection{Estado del arte}
+
+\subsubsection*{Tecnologías utilizadas}
+
+Este proyecto se enmarca en el contexto de la computación distribuida y el aprendizaje profundo, aprovechando herramientas modernas para el despliegue, inferencia y consumo de modelos de generación de imágenes. A continuación se describen las principales tecnologías involucradas:
+\begin{itemize}
+  \item \textbf{Stable Diffusion:} modelo de difusión de código abierto diseñado para la generación de imágenes a partir de texto. Es altamente eficiente en términos de calidad y tamaño, y se encuentra entre los modelos más utilizados en el ámbito del arte generativo \cite{rombach2022high, stablediffusion21, vonPlaten2023diffusers}.
+
+  \item \textbf{FastAPI:} framework web moderno para construir APIs en Python, basado en ASGI. Destaca por su rendimiento, su compatibilidad con Python async/await y su integración con herramientas de documentación como Swagger/OpenAPI \cite{ramirez2023fastapi, openapi2021}.
+
+  \item \textbf{Docker:} plataforma de contenedores que permite encapsular aplicaciones y sus dependencias, facilitando su ejecución en distintos entornos. Es ampliamente adoptada en despliegues de aplicaciones de IA, por su facilidad de uso y portabilidad \cite{docker2023}.
+
+  \item \textbf{Hugging Face Diffusers:} biblioteca que facilita el uso de modelos generativos como Stable Diffusion, ofreciendo interfaces estándar y compatibilidad con aceleración por GPU \cite{vonPlaten2023diffusers}.
+\end{itemize}
+
+\subsubsection*{Comparativa de herramientas de orquestación}
+
+Para el despliegue y escalado de este tipo de aplicaciones, existen varias tecnologías que permiten gestionar entornos distribuidos, contenedores y recursos de hardware (como GPUs). A continuación, se presenta una comparativa entre las más relevantes:
+
+\begin{table}[!ht]
+    \centering
+    \renewcommand{\arraystretch}{1.2} % Espaciado entre filas
+    \begin{tabularx}{\textwidth}{|l|X|X|X|}
+        \hline
+        \textbf{Herramienta} & \textbf{Enfoque principal} & \textbf{Ventajas destacadas} & \textbf{Limitaciones} \\ \hline
+        \textbf{Docker} & Contenerización individual & Simple, portable, ideal para desarrollo local & No gestiona clústeres ni escalado automático \\ \hline
+        \textbf{Kubernetes} & Orquestación de contenedores & Escalado automático, alta disponibilidad, gestión avanzada de recursos & Complejidad inicial, curva de aprendizaje elevada \cite{kubernetes2023} \\ \hline
+        \textbf{OpenShift} & Plataforma de aplicaciones sobre Kubernetes & Seguridad integrada, CI/CD, interfaz amigable & Requiere infraestructura más compleja y recursos avanzados \cite{openshift2023} \\ \hline
+    \end{tabularx}
+    \caption{Comparativa de herramientas de contenedores}
+\end{table}
+
+Para un entorno de desarrollo o despliegue sencillo (como en este proyecto), Docker ofrece una solución liviana y efectiva. No obstante, en contextos empresariales o de alta demanda (Big Data, alta concurrencia, multiclúster), Kubernetes o OpenShift son más adecuados por sus capacidades de orquestación, balanceo de carga y gestión distribuida.
+
+\subsubsection*{Relevancia en el contexto de computación distribuida, aprendizaje profundo y Big Data}
+
+La combinación de estas herramientas responde a los retos actuales del desarrollo de aplicaciones de inteligencia artificial, donde la escalabilidad, la portabilidad y el rendimiento son claves. En particular:
+
+\begin{itemize}
+  \item \textbf{Aprendizaje profundo} requiere hardware especializado (como GPUs) y entornos reproducibles para ejecutar modelos complejos como Stable Diffusion.
+
+  \item \textbf{Big Data} se relaciona con la necesidad de manejar grandes volúmenes de imágenes, logs y modelos. Herramientas como Kubernetes permiten escalar horizontalmente para procesar múltiples solicitudes concurrentes.
+
+  \item \textbf{Computación distribuida} cobra relevancia cuando se necesita paralelizar tareas de inferencia, despliegue o entrenamiento, especialmente en contextos multiusuario o en la nube.
+\end{itemize}
+
+Este proyecto se sitúa como una implementación ligera, pero perfectamente integrable dentro de una arquitectura más compleja si se combinara con orquestadores como Kubernetes o servicios en la nube.
+
+\subsection{Diagrama de arquitectura}
+\subsection{Documento de operaciones}
+
+
+\section{Implementación del Pipeline CI/CD}
+
+
+\section{Uso de Modelos Preentrenados}
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{sample}
+
+\end{document}
